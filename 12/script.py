@@ -51,7 +51,7 @@ def dijkstra(data, source):
                 continue
             if neighbor[1] < 0 or neighbor[1] >= len(data[0]):
                 continue
-            if data[neighbor[0]][neighbor[1]] - data[u[0]][u[1]] > 1:
+            if data[u[0]][u[1]] - data[neighbor[0]][neighbor[1]] > 1:
                 continue
 
             alt = dist[u] + 1
@@ -65,14 +65,14 @@ def dijkstra(data, source):
 
 if __name__ == "__main__":
     data, s_pos, e_pos = load_map("input.txt")
-    dist, prev = dijkstra(data, s_pos)
-    print("Star 1:", dist[e_pos])
+    dist, prev = dijkstra(data, e_pos)
+    print("Star 1:", dist[s_pos])
 
     result = list()
     for x, row in enumerate(data):
         for y, height in enumerate(row):
             if height == 1:
-                result.append(dijkstra(data, (x ,y))[0][e_pos])
+                result.append(dist[(x, y)])
     print("Star 2:", min(result))
 
 
