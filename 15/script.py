@@ -44,7 +44,6 @@ def solve_1(data, y, return_ranges=False, trim_ranges=None):
     # get overlapping ranges of x for given y
     positive_ranges = list()
     for sensor, beacon in data:
-        dy = 1 if y > sensor.y else -1
         sb_distance = distance(sensor, beacon)
         threshold = abs(y - sensor.y)
         if threshold > sb_distance:
