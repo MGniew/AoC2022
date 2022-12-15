@@ -59,19 +59,20 @@ def solve_1(data, y, return_ranges=False, trim_ranges=None):
     tmp_ranges = list()
     if trim_ranges:
         for r in positive_ranges:
-            r = list(r)
-            if r[1] < trim_ranges[0]:
+            start = r[0]
+            end = r[1]
+            if end < trim_ranges[0]:
                 continue
-            if r[0] > trim_ranges[1]:
+            if start > trim_ranges[1]:
                 continue
-            if r[0] < trim_ranges[0]:
-                r[0] = trim_ranges[0]
-            if r[1] > trim_ranges[1]:
-                r[1] = trim_ranges[1]
-            tmp_ranges.append(tuple(r))
+            if start < trim_ranges[0]:
+                start = trim_ranges[0]
+            if end > trim_ranges[1]:
+                end = trim_ranges[1]
+            tmp_ranges.append((start, end))
         positive_ranges = tmp_ranges
 
-    # merge overlapping ranges (for task 2)
+    # merge overlapping ranges
     start = 0
     while start < len(positive_ranges) - 1:
         for r_idx in range(start, len(positive_ranges) - 1):
@@ -89,6 +90,9 @@ def solve_1(data, y, return_ranges=False, trim_ranges=None):
         positive_ranges.pop(r_idx+1)
 
     # count beaconless points
+    if return_ranges:
+        return positive_ranges
+
     result = 0
     beacons = set([b for s, b in data if b.y == y])
     for r in positive_ranges:
@@ -96,9 +100,6 @@ def solve_1(data, y, return_ranges=False, trim_ranges=None):
         for b in beacons:
             if ranges_overlaps(r, (b[0], b[0])):
                 result -= 1
-
-    if return_ranges:
-        return result, positive_ranges
     return result
 
 
@@ -106,7 +107,7 @@ def solve_2(data, max_coord=4_000_000):
     # check all y
     for y in range(0, max_coord+1):
         print(y, end="\r")
-        score, ranges = solve_1(
+        ranges = solve_1(
             data, y, return_ranges=True, trim_ranges=(0, max_coord)
         )
         if len(ranges) == 2:
